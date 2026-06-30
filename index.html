@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fermenta — UI Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=block">
+  <style>
+    /* Use span.mi as shorthand for material-icons-outlined */
+    .mi { font-family: 'Material Icons Outlined'; font-weight: normal; font-style: normal;
+          font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none;
+          display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr;
+          -webkit-font-smoothing: antialiased; }
+  </style>
+</head>
+<body>
+
+<!-- Theme toggle (outside phone frame) -->
+<button id="theme-toggle" onclick="toggleTheme()" style="
+  position: fixed; top: 16px; right: 16px; z-index: 999;
+  background: var(--bg-card); color: var(--text-primary);
+  border: 1.5px solid var(--bg-divider); border-radius: 20px;
+  padding: 7px 14px; font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+">☀️ Light</button>
+
+<!-- ============================================================
+     PHONE FRAME
+     ============================================================ -->
+<div class="phone-frame">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="status-bar__time">9:41</span>
+    <div class="status-bar__icons">
+      <span class="mi" style="font-size:14px;">signal_cellular_alt</span>
+      <span class="mi" style="font-size:14px;">wifi</span>
+      <span class="mi" style="font-size:14px;">battery_full</span>
+    </div>
+  </div>
+
+  <!-- Screen Container -->
+  <div class="screen-container">
+
+    <!-- =====================================================
+         SCREEN 1: CALCULATOR
+         ===================================================== -->
+    <section class="screen active" id="screen-calculator">
+      <header class="app-bar">
+        <span class="app-bar__wordmark">FERMENTA</span>
+        <button class="btn-inline-cta" onclick="openTimeline()">Plan Bake</button>
+      </header>
+      <div class="screen-scroll">
+
+        <div class="hero-block">
+          <h1 class="display-small">Dough Calculator</h1>
+          <p class="body-medium">Adjust ratios, see ingredient weights in real time.</p>
+        </div>
+
+        <!-- Dough Type chips -->
+        <div class="tag-filter-bar" style="padding-bottom:4px;padding-top:2px;">
+          <button class="tag-chip active">Lean</button>
+          <button class="tag-chip">Enriched</button>
+          <button class="tag-chip">Rye</button>
+          <button class="tag-chip">Whole Wheat</button>
+        </div>
+
+        <!-- Sliders -->
+        <div style="height:8px;"></div>
+
+        <div class="slider-card">
+          <div class="slider-card__header">
+            <span class="slider-card__icon mi">straighten</span>
+            <span class="slider-card__label">Dough Weight</span>
+            <span class="slider-card__value" id="val-weight">800g</span>
+          </div>
+          <input type="range" class="slider" min="200" max="2000" value="800" data-unit="g" data-target="val-weight">
+          <div class="slider-hints"><span>200g</span><span>2000g</span></div>
+        </div>
+
+        <div class="slider-card">
+          <div class="slider-card__header">
+            <span class="slider-card__icon mi">water</span>
+            <span class="slider-card__label">Hydration</span>
+            <span class="slider-card__value" id="val-hydration">72%</span>
+          </div>
+          <input type="range" class="slider" min="50" max="100" value="72" data-unit="%" data-target="val-hydration">
+          <div class="slider-hints"><span>50%</span><span>100%</span></div>
+        </div>
+
+        <div class="slider-card">
+          <div class="slider-card__header">
+            <span class="slider-card__icon mi">bubble_chart</span>
+            <span class="slider-card__label">Starter</span>
+            <span class="slider-card__value" id="val-starter">20%</span>
+          </div>
+          <input type="range" class="slider" min="5" max="50" value="20" data-unit="%" data-target="val-starter">
+          <div class="slider-hints"><span>5%</span><span>50%</span></div>
+        </div>
+
+        <div class="slider-card">
+          <div class="slider-card__header">
+            <span class="slider-card__icon mi">water_drop</span>
+            <span class="slider-card__label">Salt</span>
+            <span class="slider-card__value" id="val-salt">2.0%</span>
+          </div>
+          <input type="range" class="slider" min="1" max="3" step="0.1" value="2.0" data-unit="%" data-target="val-salt">
+          <div class="slider-hints"><span>1%</span><span>3%</span></div>
+        </div>
+
+        <div class="slider-card">
+          <div class="slider-card__header">
+            <span class="slider-card__icon mi">thermostat</span>
+            <span class="slider-card__label">Room Temp</span>
+            <span class="slider-card__value" id="val-temp">22°C</span>
+          </div>
+          <input type="range" class="slider" min="10" max="35" value="22" data-unit="°C" data-target="val-temp">
+          <div class="slider-hints"><span>10°C</span><span>35°C</span></div>
+        </div>
+
+        <!-- Ingredients Results -->
+        <div class="section-header">
+          <span class="headline-medium">Ingredients</span>
+          <span class="label-medium" style="color:var(--accent);font-weight:600;">Auto-calculated</span>
+        </div>
+
+        <div class="ingredient-list">
+          <div class="ingredient-row">
+            <div class="ingredient-avatar">F</div>
+            <span class="ingredient-name">Bread Flour</span>
+            <span class="ingredient-weight">464g</span>
+          </div>
+          <div class="ingredient-row">
+            <div class="ingredient-avatar">W</div>
+            <span class="ingredient-name">Water</span>
+            <span class="ingredient-weight">334g</span>
+          </div>
+          <div class="ingredient-row">
+            <div class="ingredient-avatar">S</div>
+            <span class="ingredient-name">Starter</span>
+            <span class="ingredient-weight">93g</span>
+          </div>
+          <div class="ingredient-row">
+            <div class="ingredient-avatar">Sa</div>
+            <span class="ingredient-name">Salt</span>
+            <span class="ingredient-weight">9g</span>
+          </div>
+        </div>
+
+        <!-- AI Suggestion Card -->
+        <div style="height:16px;"></div>
+        <div class="ai-card">
+          <div class="ai-card__header">
+            <span style="font-size:16px;">✨</span>
+            <span class="ai-card__label">AI Suggestion</span>
+          </div>
+          <p class="ai-card__text">For better oven spring at 22°C, try reducing hydration slightly and increasing starter to speed up bulk.</p>
+          <div class="ai-diff-row">
+            <span class="ai-diff-label">Hydration</span>
+            <div class="ai-diff-values">
+              <span class="ai-diff-old">72%</span>
+              <span class="mi" style="font-size:14px;color:var(--text-tertiary);">arrow_forward</span>
+              <span class="ai-diff-new">70%</span>
+            </div>
+          </div>
+          <div class="ai-diff-row">
+            <span class="ai-diff-label">Starter</span>
+            <div class="ai-diff-values">
+              <span class="ai-diff-old">20%</span>
+              <span class="mi" style="font-size:14px;color:var(--text-tertiary);">arrow_forward</span>
+              <span class="ai-diff-new">25%</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:16px 16px 40px;">
+          <button class="btn-primary" onclick="openTimeline()">
+            <span class="mi" style="font-size:18px;">schedule</span>
+            Plan Bake
+          </button>
+        </div>
+
+      </div><!-- end screen-scroll -->
+    </section>
+
+    <!-- =====================================================
+         SCREEN 2: STARTER
+         ===================================================== -->
+    <section class="screen" id="screen-starter">
+      <header class="app-bar">
+        <span class="app-bar__title">My Starters</span>
+        <button class="btn-inline-cta">+ Add</button>
+      </header>
+      <div class="screen-scroll">
+
+        <div style="height:8px;"></div>
+
+        <!-- Starter Card -->
+        <div class="starter-card">
+          <div class="starter-card__header">
+            <div>
+              <div class="starter-card__name">Levain</div>
+              <div class="label-medium" style="margin-top:3px;">Started 6 months ago</div>
+            </div>
+            <span class="health-badge health-badge--happy">Happy 😊</span>
+          </div>
+          <div class="starter-card__stats">
+            <div>
+              <div class="starter-stat__label">Last Fed</div>
+              <div class="starter-stat__value">8h ago</div>
+            </div>
+            <div>
+              <div class="starter-stat__label">Next Feeding</div>
+              <div class="starter-stat__value">In 4h</div>
+            </div>
+            <div>
+              <div class="starter-stat__label">Hydration</div>
+              <div class="starter-stat__value">100%</div>
+            </div>
+            <div>
+              <div class="starter-stat__label">Total Feedings</div>
+              <div class="starter-stat__value">148</div>
+            </div>
+          </div>
+          <button class="btn-record-feeding">
+            <span class="mi" style="font-size:18px;">water_drop</span>
+            Record Feeding
+          </button>
+        </div>
+
+        <!-- Notification Banner -->
+        <div class="notif-banner">
+          <span class="notif-banner__icon">🔔</span>
+          <div>
+            <div class="notif-banner__title">Reminders active</div>
+            <div class="notif-banner__desc">You'll be notified every 12 hours to feed Levain.</div>
+          </div>
+        </div>
+
+        <!-- Feeding Log -->
+        <div class="section-header">
+          <span class="headline-medium">Feeding Log</span>
+          <button class="section-header__trailing">See all</button>
+        </div>
+
+        <div class="ingredient-list">
+          <div class="ingredient-row">
+            <div class="ingredient-avatar" style="background:var(--accent-light);font-size:16px;">🌾</div>
+            <div style="flex:1;">
+              <div class="title-medium">50g flour · 50g water</div>
+              <div class="label-medium" style="margin-top:3px;">Today, 8:00 AM</div>
+            </div>
+            <span class="health-badge health-badge--happy" style="font-size:11px;padding:3px 8px;">Active</span>
+          </div>
+          <div class="ingredient-row">
+            <div class="ingredient-avatar" style="background:var(--accent-light);font-size:16px;">🌾</div>
+            <div style="flex:1;">
+              <div class="title-medium">50g flour · 50g water</div>
+              <div class="label-medium" style="margin-top:3px;">Yesterday, 8:30 PM</div>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <div class="ingredient-avatar" style="background:var(--bg-divider);font-size:16px;">🌾</div>
+            <div style="flex:1;">
+              <div class="title-medium">50g flour · 50g water</div>
+              <div class="label-medium" style="margin-top:3px;">Yesterday, 8:00 AM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bake Log teaser -->
+        <div class="section-header">
+          <span class="headline-medium">Bake Log</span>
+          <button class="section-header__trailing">See all</button>
+        </div>
+
+        <div class="ingredient-list" style="margin-bottom:40px;">
+          <div class="ingredient-row">
+            <div class="ingredient-avatar">🍞</div>
+            <div style="flex:1;">
+              <div class="title-medium">Country Sourdough</div>
+              <div class="label-medium" style="margin-top:3px;">2 days ago · 800g</div>
+            </div>
+            <span class="mi" style="font-size:16px;color:var(--text-tertiary);">chevron_right</span>
+          </div>
+          <div class="ingredient-row">
+            <div class="ingredient-avatar">🥖</div>
+            <div style="flex:1;">
+              <div class="title-medium">Dark Rye</div>
+              <div class="label-medium" style="margin-top:3px;">5 days ago · 600g</div>
+            </div>
+            <span class="mi" style="font-size:16px;color:var(--text-tertiary);">chevron_right</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SCREEN 3: RECIPES
+         ===================================================== -->
+    <section class="screen" id="screen-recipes">
+      <header class="app-bar">
+        <span class="app-bar__wordmark">Recipes</span>
+        <button class="app-bar__action" onclick="openSearch()">
+          <span class="mi">search</span>
+        </button>
+      </header>
+
+      <!-- Sub-tabs -->
+      <div class="sub-tabs">
+        <button class="sub-tab active" data-subscreen="vault">Vault</button>
+        <button class="sub-tab" data-subscreen="discover">Discover</button>
+        <button class="sub-tab" data-subscreen="community">Community</button>
+      </div>
+
+      <!-- ---- SUB: Vault ---- -->
+      <div class="sub-screen active" id="sub-vault">
+        <div class="search-bar" style="margin-top:12px;">
+          <span class="mi">search</span>
+          <input type="text" placeholder="Search recipes...">
+        </div>
+        <div class="tag-filter-bar">
+          <button class="tag-chip active">All</button>
+          <button class="tag-chip">Free</button>
+          <button class="tag-chip">Premium</button>
+          <button class="tag-chip">Sourdough</button>
+          <button class="tag-chip">Enriched</button>
+          <button class="tag-chip">Rye</button>
+        </div>
+        <div class="recipes-scroll">
+          <div class="recipe-grid">
+
+            <div class="recipe-card" onclick="openDetail()">
+              <div class="recipe-card__image">🍞</div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Country Sourdough</div>
+                <div class="recipe-card__subtitle">72% · Normandy, France</div>
+              </div>
+            </div>
+
+            <div class="recipe-card" onclick="openPaywall()">
+              <div class="recipe-card__image">
+                🍞
+                <span class="recipe-card__premium-badge">Premium</span>
+              </div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Tartine Bread</div>
+                <div class="recipe-card__subtitle">80% · San Francisco, USA</div>
+              </div>
+            </div>
+
+            <div class="recipe-card" onclick="openDetail()">
+              <div class="recipe-card__image">🥖</div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Ciabatta</div>
+                <div class="recipe-card__subtitle">75% · Lombardy, Italy</div>
+              </div>
+            </div>
+
+            <div class="recipe-card" onclick="openPaywall()">
+              <div class="recipe-card__image">
+                🥐
+                <span class="recipe-card__premium-badge">Premium</span>
+              </div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Sourdough Brioche</div>
+                <div class="recipe-card__subtitle">65% · Normandy, France</div>
+              </div>
+            </div>
+
+            <div class="recipe-card" onclick="openDetail()">
+              <div class="recipe-card__image">🍞</div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Dark Rye</div>
+                <div class="recipe-card__subtitle">85% · Berlin, Germany</div>
+              </div>
+            </div>
+
+            <div class="recipe-card" onclick="openDetail()">
+              <div class="recipe-card__image">🫓</div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Focaccia al Rosmarino</div>
+                <div class="recipe-card__subtitle">90% · Liguria, Italy</div>
+              </div>
+            </div>
+
+            <div class="recipe-card" onclick="openPaywall()">
+              <div class="recipe-card__image">
+                🥐
+                <span class="recipe-card__premium-badge">Premium</span>
+              </div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Pain de Campagne</div>
+                <div class="recipe-card__subtitle">68% · Lyon, France</div>
+              </div>
+            </div>
+
+            <div class="recipe-card" onclick="openDetail()">
+              <div class="recipe-card__image">🍞</div>
+              <div class="recipe-card__body">
+                <div class="recipe-card__title">Whole Wheat Loaf</div>
+                <div class="recipe-card__subtitle">74% · Vermont, USA</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div><!-- end sub-vault -->
+
+      <!-- ---- SUB: Discover ---- -->
+      <div class="sub-screen" id="sub-discover">
+        <div class="search-bar" style="margin-top:12px;">
+          <span class="mi">public</span>
+          <input type="text" placeholder="Search by country, region...">
+        </div>
+        <div class="recipes-scroll">
+          <div class="discover-grid">
+            <div class="discover-cell discover-cell--tall" style="background:#D4C9B8;" onclick="openDetail()">
+              <span style="font-size:36px;">🍞</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇫🇷 France<br>Country Sourdough</span>
+              </div>
+            </div>
+            <div class="discover-cell" style="background:#C8BFB0;" onclick="openDetail()">
+              <span style="font-size:22px;">🥖</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇮🇹 Italy</span>
+              </div>
+            </div>
+            <div class="discover-cell" style="background:#DDD5C6;" onclick="openDetail()">
+              <span style="font-size:22px;">🍞</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇩🇪 Germany</span>
+              </div>
+            </div>
+            <div class="discover-cell" style="background:#C5BCA9;" onclick="openPaywall()">
+              <span style="font-size:22px;">🥐</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇫🇷 France</span>
+              </div>
+            </div>
+            <div class="discover-cell discover-cell--tall" style="background:#CEC4B1;" onclick="openDetail()">
+              <span style="font-size:36px;">🫓</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇮🇹 Italy<br>Focaccia</span>
+              </div>
+            </div>
+            <div class="discover-cell" style="background:#D9D0C0;" onclick="openPaywall()">
+              <span style="font-size:22px;">🍞</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇺🇸 USA</span>
+              </div>
+            </div>
+            <div class="discover-cell" style="background:#BFB8A6;" onclick="openDetail()">
+              <span style="font-size:22px;">🥯</span>
+            </div>
+            <div class="discover-cell discover-cell--tall" style="background:#D0C6B4;" onclick="openDetail()">
+              <span style="font-size:36px;">🌾</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇯🇵 Japan<br>Milk Bread</span>
+              </div>
+            </div>
+            <div class="discover-cell" style="background:#CAC1AF;" onclick="openDetail()">
+              <span style="font-size:22px;">🍞</span>
+            </div>
+            <div class="discover-cell" style="background:#D4C8B6;" onclick="openDetail()">
+              <span style="font-size:22px;">🥖</span>
+            </div>
+            <div class="discover-cell" style="background:#C8BCA8;" onclick="openPaywall()">
+              <span style="font-size:22px;">🥐</span>
+              <div class="discover-cell__overlay">
+                <span class="discover-cell__label">🇲🇽 Mexico</span>
+              </div>
+            </div>
+            <div class="discover-cell" style="background:#D2C9B7;" onclick="openDetail()">
+              <span style="font-size:22px;">🫓</span>
+            </div>
+          </div>
+        </div>
+      </div><!-- end sub-discover -->
+
+      <!-- ---- SUB: Community ---- -->
+      <div class="sub-screen" id="sub-community">
+        <div class="feed-section-tabs">
+          <button class="feed-section-tab active">Popular</button>
+          <button class="feed-section-tab">Latest</button>
+        </div>
+        <div class="recipes-scroll">
+
+          <div class="post-card" onclick="openComments()">
+            <div class="post-card__header">
+              <div class="post-avatar">P</div>
+              <div>
+                <div class="post-username">panificador_mx</div>
+                <div class="post-timestamp">2h ago</div>
+              </div>
+            </div>
+            <div class="post-image">🍞</div>
+            <p class="post-caption">First successful open crumb! Used the Country Sourdough at 76% hydration. 18h cold retard made all the difference — and Fermenta's timeline was spot on.</p>
+            <div class="post-actions">
+              <button class="post-action">
+                <span class="mi">favorite_border</span> 128
+              </button>
+              <button class="post-action" onclick="event.stopPropagation(); openComments()">
+                <span class="mi">chat_bubble_outline</span> 14
+              </button>
+            </div>
+          </div>
+
+          <div class="post-card" onclick="openComments()">
+            <div class="post-card__header">
+              <div class="post-avatar">B</div>
+              <div>
+                <div class="post-username">breadbaker_de</div>
+                <div class="post-timestamp">5h ago</div>
+              </div>
+            </div>
+            <div class="post-image">🥖</div>
+            <p class="post-caption">Dark rye adapted to 90% rye flour. Added caraway seeds and a touch of molasses. Dense but incredibly flavorful — my new house bread.</p>
+            <div class="post-actions">
+              <button class="post-action"><span class="mi">favorite_border</span> 87</button>
+              <button class="post-action" onclick="event.stopPropagation(); openComments()">
+                <span class="mi">chat_bubble_outline</span> 9
+              </button>
+            </div>
+          </div>
+
+          <div class="post-card" onclick="openComments()">
+            <div class="post-card__header">
+              <div class="post-avatar">S</div>
+              <div>
+                <div class="post-username">sourdoughlife_it</div>
+                <div class="post-timestamp">1d ago</div>
+              </div>
+            </div>
+            <div class="post-image">🥐</div>
+            <p class="post-caption">Sourdough brioche — 3rd attempt and finally nailed the lamination. The enriched mode timeline was perfect for the butter incorporation phase.</p>
+            <div class="post-actions">
+              <button class="post-action"><span class="mi">favorite_border</span> 214</button>
+              <button class="post-action" onclick="event.stopPropagation(); openComments()">
+                <span class="mi">chat_bubble_outline</span> 31
+              </button>
+            </div>
+          </div>
+
+          <div class="post-card" onclick="openComments()">
+            <div class="post-card__header">
+              <div class="post-avatar">L</div>
+              <div>
+                <div class="post-username">levain_lover</div>
+                <div class="post-timestamp">2d ago</div>
+              </div>
+            </div>
+            <div class="post-image">🫓</div>
+            <p class="post-caption">Focaccia with a 28h cold retard. The bubbles! Topped with rosemary and fleur de sel. Using the focaccia recipe from the vault as a base.</p>
+            <div class="post-actions">
+              <button class="post-action"><span class="mi">favorite_border</span> 156</button>
+              <button class="post-action" onclick="event.stopPropagation(); openComments()">
+                <span class="mi">chat_bubble_outline</span> 22
+              </button>
+            </div>
+          </div>
+
+          <div class="spacer-40"></div>
+        </div>
+      </div><!-- end sub-community -->
+
+    </section><!-- end screen-recipes -->
+
+    <!-- =====================================================
+         OVERLAY: Recipe Detail
+         ===================================================== -->
+    <div class="overlay" id="overlay-detail">
+      <header class="app-bar">
+        <button class="app-bar__back" onclick="closeDetail()">
+          <span class="mi">arrow_back_ios</span>
+        </button>
+        <span class="app-bar__title">Country Sourdough</span>
+        <button class="app-bar__action">
+          <span class="mi">ios_share</span>
+        </button>
+      </header>
+      <div style="flex:1;overflow-y:auto;scrollbar-width:none;">
+        <div class="detail-image">
+          <span>🍞</span>
+          <div class="detail-image__origin-badge">🇫🇷 Normandy, France</div>
+        </div>
+        <div class="detail-body">
+          <h1 class="detail-title">Country Sourdough</h1>
+
+          <div class="detail-section-title">Formula</div>
+          <div class="detail-table">
+            <div class="detail-row">
+              <span class="detail-row__label">Hydration</span>
+              <span class="detail-row__value">72%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Starter %</span>
+              <span class="detail-row__value">20%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Salt %</span>
+              <span class="detail-row__value">2%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Dough Type</span>
+              <span class="detail-row__value">Lean</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Tier</span>
+              <span class="detail-row__value" style="color:var(--success);">Free</span>
+            </div>
+          </div>
+
+          <div class="detail-section-title">Origin</div>
+          <div class="detail-table">
+            <div class="detail-row">
+              <span class="detail-row__label">Country</span>
+              <span class="detail-row__value">France</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Region</span>
+              <span class="detail-row__value">Normandy</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Style</span>
+              <span class="detail-row__value">Country Loaf</span>
+            </div>
+          </div>
+
+          <div style="height:4px;"></div>
+          <button class="btn-primary" style="margin-bottom:12px;" onclick="closeDetail()">
+            <span class="mi" style="font-size:18px;">straighten</span>
+            Open in Calculator
+          </button>
+          <button class="btn-secondary" onclick="closeDetail(); openTimeline();">
+            <span class="mi" style="font-size:18px;">schedule</span>
+            Plan Bake
+          </button>
+          <div class="spacer-40"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         OVERLAY: Timeline
+         ===================================================== -->
+    <div class="overlay" id="overlay-timeline">
+      <header class="app-bar">
+        <button class="app-bar__back" onclick="closeTimeline()">
+          <span class="mi">arrow_back_ios</span>
+        </button>
+        <span class="app-bar__title">Plan Your Bake</span>
+      </header>
+      <div style="flex:1;overflow-y:auto;scrollbar-width:none;">
+        <div class="hero-block">
+          <h1 class="display-small">Your Schedule</h1>
+          <p class="body-medium">Working back from <strong style="color:var(--text-primary);">Sunday 8:00 AM</strong></p>
+        </div>
+
+        <div class="timeline-list">
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--done">
+              <span class="mi" style="font-size:16px;">check</span>
+            </div>
+            <div class="stage-info">
+              <div class="stage-name">Feed Starter</div>
+              <div class="stage-time">Fri · 8:00 PM</div>
+            </div>
+            <div class="stage-duration" style="color:var(--text-tertiary);">Done</div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--next">2</div>
+            <div class="stage-info">
+              <div class="stage-name">Mix Dough</div>
+              <div class="stage-time">Sat · 8:00 AM</div>
+            </div>
+            <div class="stage-duration" style="color:var(--accent);">Now</div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--upcoming">3</div>
+            <div class="stage-info">
+              <div class="stage-name">Bulk Ferment</div>
+              <div class="stage-time">Sat · 8:30 AM</div>
+            </div>
+            <div class="stage-duration">4h 30m</div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--upcoming">4</div>
+            <div class="stage-info">
+              <div class="stage-name">Stretch &amp; Fold</div>
+              <div class="stage-time">Sat · 9:00 AM</div>
+            </div>
+            <div class="stage-duration">×4</div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--upcoming">5</div>
+            <div class="stage-info">
+              <div class="stage-name">Shape</div>
+              <div class="stage-time">Sat · 1:00 PM</div>
+            </div>
+            <div class="stage-duration">30m</div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--upcoming">6</div>
+            <div class="stage-info">
+              <div class="stage-name">Cold Retard</div>
+              <div class="stage-time">Sat · 2:00 PM</div>
+            </div>
+            <div class="stage-duration">16h</div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--upcoming">7</div>
+            <div class="stage-info">
+              <div class="stage-name">Preheat Oven</div>
+              <div class="stage-time">Sun · 6:30 AM</div>
+            </div>
+            <div class="stage-duration">1h</div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-bubble stage-bubble--upcoming">8</div>
+            <div class="stage-info">
+              <div class="stage-name">Score &amp; Bake</div>
+              <div class="stage-time">Sun · 7:30 AM</div>
+            </div>
+            <div class="stage-duration">45m</div>
+          </div>
+
+          <div class="stage-item" style="border:none;">
+            <div class="stage-bubble" style="background:var(--accent-light);font-size:18px;">🍞</div>
+            <div class="stage-info">
+              <div class="stage-name" style="color:var(--accent);">Eat!</div>
+              <div class="stage-time">Sun · 8:15 AM</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:16px 16px 40px;">
+          <button class="btn-primary">
+            <span class="mi" style="font-size:18px;">notifications_outlined</span>
+            Set Reminders
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         OVERLAY: Search
+         ===================================================== -->
+    <div class="overlay" id="overlay-search">
+      <header class="app-bar" style="border-bottom:1px solid var(--bg-divider);">
+        <button class="app-bar__back" onclick="closeSearch()">
+          <span class="mi">arrow_back_ios</span>
+        </button>
+        <div style="flex:1;background:var(--bg-card);border-radius:8px;display:flex;align-items:center;gap:8px;padding:8px 12px;margin:0 8px;">
+          <span class="mi" style="font-size:18px;color:var(--text-tertiary);">search</span>
+          <input type="text" placeholder="Search recipes..." autofocus
+            style="flex:1;border:none;background:none;outline:none;font-size:14px;color:var(--text-primary);font-family:var(--font);">
+          <span class="mi" style="font-size:18px;color:var(--text-tertiary);">cancel</span>
+        </div>
+      </header>
+      <div style="flex:1;overflow-y:auto;scrollbar-width:none;">
+        <div style="padding:12px 16px 4px;">
+          <p class="label-medium">Results for <strong style="color:var(--text-primary);">"sourdough"</strong></p>
+        </div>
+
+        <div class="post-card" onclick="openDetail()">
+          <div class="post-card__header">
+            <div class="post-avatar" style="border-radius:8px;font-size:20px;">🍞</div>
+            <div>
+              <div class="post-username">Country Sourdough</div>
+              <div class="post-timestamp">72% · France · Free</div>
+            </div>
+          </div>
+          <p class="post-caption" style="-webkit-line-clamp:2;">Classic French country loaf with a thin, crackly crust and open, chewy crumb. The entry-level sourdough in the Fermenta vault.</p>
+          <div class="post-actions">
+            <span class="label-medium">Lean dough</span>
+          </div>
+        </div>
+
+        <div class="post-card" onclick="openPaywall()">
+          <div class="post-card__header">
+            <div class="post-avatar" style="border-radius:8px;font-size:20px;">🍞</div>
+            <div>
+              <div class="post-username">Tartine Bread <span style="color:var(--premium);font-size:11px;font-weight:700;margin-left:4px;">PREMIUM</span></div>
+              <div class="post-timestamp">80% · USA</div>
+            </div>
+          </div>
+          <p class="post-caption" style="-webkit-line-clamp:2;">High-hydration American sourdough from Chad Robertson's method. Open, irregular crumb. Requires confident shaping hands.</p>
+        </div>
+
+        <div class="post-card" onclick="openDetail()">
+          <div class="post-card__header">
+            <div class="post-avatar" style="border-radius:8px;font-size:20px;">🍞</div>
+            <div>
+              <div class="post-username">Whole Wheat Loaf</div>
+              <div class="post-timestamp">74% · USA · Free</div>
+            </div>
+          </div>
+          <p class="post-caption" style="-webkit-line-clamp:2;">50% whole wheat blend with complex, nutty flavour. Shorter bulk ferment than lean doughs due to the bran content.</p>
+        </div>
+
+        <div class="spacer-40"></div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         SCRIM
+         ===================================================== -->
+    <div class="sheet-scrim" id="sheet-scrim" onclick="closeComments()"></div>
+
+    <!-- =====================================================
+         BOTTOM SHEET: Comments
+         ===================================================== -->
+    <div class="bottom-sheet" id="sheet-comments">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <span class="sheet-title">14 Comments</span>
+        <button class="sheet-close" onclick="closeComments()">Close</button>
+      </div>
+      <div class="sheet-scroll">
+        <div class="comment-row">
+          <div class="comment-avatar">A</div>
+          <div style="flex:1;">
+            <div class="comment-header">
+              <span class="comment-username">alchemybread</span>
+              <span class="comment-time">Just now</span>
+            </div>
+            <p class="comment-text">What flour blend did you use? Mine never gets this open!</p>
+            <div class="comment-actions">
+              <button class="comment-action"><span class="mi">thumb_up</span> 2</button>
+              <button class="comment-action"><span class="mi">thumb_down</span> 0</button>
+              <button class="comment-action" style="color:var(--accent);font-weight:600;">Reply</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-row">
+          <div class="comment-avatar">J</div>
+          <div style="flex:1;">
+            <div class="comment-header">
+              <span class="comment-username">johannesbrot</span>
+              <span class="comment-time">1h</span>
+            </div>
+            <p class="comment-text">The scoring is incredible. Did you use a lame or a razor blade? I can't get oven spring like that.</p>
+            <div class="comment-actions">
+              <button class="comment-action"><span class="mi">thumb_up</span> 5</button>
+              <button class="comment-action"><span class="mi">thumb_down</span> 0</button>
+              <button class="comment-action" style="color:var(--accent);font-weight:600;">Reply</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-row">
+          <div class="comment-avatar">M</div>
+          <div style="flex:1;">
+            <div class="comment-header">
+              <span class="comment-username">milleflour</span>
+              <span class="comment-time">3h</span>
+            </div>
+            <p class="comment-text">This is the kind of bake that makes all the early failures worth it. Beautiful work! 🙌</p>
+            <div class="comment-actions">
+              <button class="comment-action"><span class="mi">thumb_up</span> 11</button>
+              <button class="comment-action"><span class="mi">thumb_down</span> 0</button>
+              <button class="comment-action" style="color:var(--accent);font-weight:600;">Reply</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-row">
+          <div class="comment-avatar">R</div>
+          <div style="flex:1;">
+            <div class="comment-header">
+              <span class="comment-username">rustikbrot</span>
+              <span class="comment-time">5h</span>
+            </div>
+            <p class="comment-text">The crust colour is perfect. What temperature did you bake at and for how long?</p>
+            <div class="comment-actions">
+              <button class="comment-action"><span class="mi">thumb_up</span> 7</button>
+              <button class="comment-action"><span class="mi">thumb_down</span> 0</button>
+              <button class="comment-action" style="color:var(--accent);font-weight:600;">Reply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sheet-input-bar">
+        <input type="text" placeholder="What do you think?">
+      </div>
+    </div>
+
+    <!-- =====================================================
+         PAYWALL OVERLAY
+         ===================================================== -->
+    <div class="paywall-overlay" id="overlay-paywall">
+      <div class="paywall-scrim" onclick="closePaywall()"></div>
+      <div class="paywall-sheet">
+        <div class="sheet-handle" style="margin-bottom:16px;"></div>
+        <div class="paywall-icon-container">🌟</div>
+        <div class="paywall-title">Unlock Premium</div>
+        <p class="paywall-subtitle">Unlimited starters, all premium recipes, community publishing, and 50 AI assists per month.</p>
+        <div class="benefits-list">
+          <div class="benefit-row">
+            <span class="benefit-check mi">check_circle</span>
+            <span class="benefit-text">All 8 premium recipes</span>
+          </div>
+          <div class="benefit-row">
+            <span class="benefit-check mi">check_circle</span>
+            <span class="benefit-text">Unlimited starter profiles</span>
+          </div>
+          <div class="benefit-row">
+            <span class="benefit-check mi">check_circle</span>
+            <span class="benefit-text">Publish to community feed</span>
+          </div>
+          <div class="benefit-row">
+            <span class="benefit-check mi">check_circle</span>
+            <span class="benefit-text">50 AI recipe assists / month</span>
+          </div>
+          <div class="benefit-row">
+            <span class="benefit-check mi">check_circle</span>
+            <span class="benefit-text">Unlimited bake log history</span>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-bottom:10px;" onclick="closePaywall()">
+          Start 7-Day Free Trial — $4.99/mo
+        </button>
+        <button class="btn-text" onclick="closePaywall()">Restore Purchase</button>
+      </div>
+    </div>
+
+  </div><!-- end screen-container -->
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" data-screen="calculator">
+      <span class="mi nav-icon">straighten</span>
+      <span class="nav-label">Calculator</span>
+    </button>
+    <button class="nav-tab" data-screen="starter">
+      <span class="mi nav-icon">water_drop</span>
+      <span class="nav-label">Starter</span>
+    </button>
+    <button class="nav-tab" data-screen="recipes">
+      <span class="mi nav-icon">menu_book</span>
+      <span class="nav-label">Recipes</span>
+    </button>
+  </nav>
+
+</div><!-- end phone-frame -->
+
+<script>
+  // --- Tab Navigation ---
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + tab.dataset.screen).classList.add('active');
+    });
+  });
+
+  // --- Sub-tab Navigation ---
+  document.querySelectorAll('.sub-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const parent = tab.closest('.screen');
+      parent.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      parent.querySelectorAll('.sub-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('sub-' + tab.dataset.subscreen).classList.add('active');
+    });
+  });
+
+  // --- Feed Section Tabs ---
+  document.querySelectorAll('.feed-section-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tab.closest('.feed-section-tabs').querySelectorAll('.feed-section-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // --- Tag Chips ---
+  document.querySelectorAll('.tag-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.closest('.tag-filter-bar').querySelectorAll('.tag-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // --- Sliders ---
+  document.querySelectorAll('.slider').forEach(slider => {
+    const update = () => {
+      const min = parseFloat(slider.min), max = parseFloat(slider.max), val = parseFloat(slider.value);
+      const pct = ((val - min) / (max - min)) * 100;
+      slider.style.background = `linear-gradient(to right, var(--accent) ${pct}%, var(--bg-divider) ${pct}%)`;
+      const target = slider.dataset.target;
+      const unit = slider.dataset.unit || '';
+      if (target) document.getElementById(target).textContent = slider.value + unit;
+    };
+    slider.addEventListener('input', update);
+    update();
+  });
+
+  // --- Overlays ---
+  function openDetail()   { document.getElementById('overlay-detail').classList.add('active'); }
+  function closeDetail()  { document.getElementById('overlay-detail').classList.remove('active'); }
+  function openTimeline() { document.getElementById('overlay-timeline').classList.add('active'); }
+  function closeTimeline(){ document.getElementById('overlay-timeline').classList.remove('active'); }
+  function openSearch()   { document.getElementById('overlay-search').classList.add('active'); }
+  function closeSearch()  { document.getElementById('overlay-search').classList.remove('active'); }
+  function openPaywall()  { document.getElementById('overlay-paywall').classList.add('active'); }
+  function closePaywall() { document.getElementById('overlay-paywall').classList.remove('active'); }
+
+  // --- Comments Sheet ---
+  function openComments() {
+    document.getElementById('sheet-comments').classList.add('active');
+    document.getElementById('sheet-scrim').classList.add('active');
+  }
+  function closeComments() {
+    document.getElementById('sheet-comments').classList.remove('active');
+    document.getElementById('sheet-scrim').classList.remove('active');
+  }
+
+  // --- Theme Toggle ---
+  (function initTheme() {
+    const saved = localStorage.getItem('fermenta-theme');
+    const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (osDark ? 'dark' : 'light');
+    applyTheme(theme);
+  })();
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('fermenta-theme', theme);
+    const btn = document.getElementById('theme-toggle');
+    btn.textContent = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+</script>
+
+</body>
+</html>
