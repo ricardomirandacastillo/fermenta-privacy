@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fermenta – Artisan Baking Assistant</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #faf8f4;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #8B6914;
+    }
+    .tagline {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #666;
+      max-width: 380px;
+      line-height: 1.5;
+    }
+    .badges {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .badge:hover { opacity: 0.8; }
+    .badge-ios {
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .badge-android {
+      background: #8B6914;
+      color: #fff;
+    }
+    .badge-coming {
+      background: #eee;
+      color: #999;
+      cursor: default;
+    }
+    footer {
+      margin-top: 60px;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+    footer a {
+      color: #8B6914;
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="icon">🌾</div>
+  <h1>Fermenta</h1>
+  <p class="tagline">The artisan baking assistant for sourdough and enriched doughs. No more math, no more guessing.</p>
+
+  <div class="badges">
+    <!-- Replace # with real store URLs when published -->
+    <a class="badge badge-coming" href="#">App Store – Coming Soon</a>
+    <a class="badge badge-coming" href="#">Google Play – Coming Soon</a>
+  </div>
+
+  <footer>
+    <a href="/fermenta-privacy/privacy">Privacy Policy</a> &middot;
+    <a href="/fermenta-privacy/terms">Terms of Service</a> &middot;
+    <a href="mailto:ric.ignaciom@gmail.com">Contact</a>
+  </footer>
+
+</body>
+</html>
